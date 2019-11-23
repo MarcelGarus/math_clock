@@ -2,7 +2,7 @@ import 'dart:math' show Random;
 
 import 'package:flutter/foundation.dart';
 
-import 'nodes.dart';
+import 'terms.dart';
 import 'utils.dart';
 
 /// The maximum value of a math term or subterm.
@@ -13,7 +13,7 @@ const _maximumModuloBase = 10;
 
 // Creates a node from the number, then makes that node more complicated a few
 // times. While doing this, use every operand at least once.
-MathNode generateMathTerm(int number) {
+Term generateMathTerm(int number) {
   assert(number != null);
 
   // All the possible types that still can be used. The set is mutable and the
@@ -33,7 +33,7 @@ MathNode generateMathTerm(int number) {
 
   // Create a node and make it more complicated a few times.
   var complexity = 2 + Random().nextInt(2);
-  MathNode node = Number(number);
+  Term node = Number(number);
 
   for (var step = 0; step < complexity; step++) {
     node = _makeMoreComplicated(node, possibleTypes);
@@ -45,7 +45,7 @@ MathNode generateMathTerm(int number) {
 /// Returns a new node that produces the same result, but is (most of the time)
 /// more complicated.
 /// Also mutates the [possibleTypes].
-MathNode _makeMoreComplicated(MathNode node, Set<Type> possibleTypes) {
+Term _makeMoreComplicated(Term node, Set<Type> possibleTypes) {
   if (node is! Number) {
     // We only complicate numbers, which are the leaves of the tree.
     // Other nodes simply forward the call to a random child.
@@ -92,7 +92,7 @@ MathNode _makeMoreComplicated(MathNode node, Set<Type> possibleTypes) {
   return replacement;
 }
 
-MathNode _makeNumberMoreComplicated({
+Term _makeNumberMoreComplicated({
   @required int number,
   @required bool Function(Type type) isPossible,
 }) {

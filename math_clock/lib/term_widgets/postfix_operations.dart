@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:math_clock/math/math.dart';
 
-import 'math_node_widget.dart';
+import 'term_widget.dart';
 import 'tight_text.dart';
 
-class _PostfixOperationWidget extends MathNodeWidget {
+/// Renders a term which is a postfix operation (something just written after
+/// the operand), like x², x³ or x!.
+class _PostfixOperationWidget extends TermWidget {
   const _PostfixOperationWidget(
-    MathNode node,
+    Term term,
     this.operation, {
+    Key key,
     this.typesToBracket = const [],
   })  : assert(operation != null),
         assert(typesToBracket != null),
-        super(node);
+        super(term, key: key);
 
   final String operation;
   final List<Type> typesToBracket;
@@ -31,17 +34,17 @@ class _PostfixOperationWidget extends MathNodeWidget {
 const _lowerOrderOperands = [Add, Subtract, Multiply, Divide, Modulo];
 
 class SquaredWidget extends _PostfixOperationWidget {
-  const SquaredWidget(Squared node)
-      : super(node, '²', typesToBracket: const [..._lowerOrderOperands, Cubed]);
+  const SquaredWidget(Squared term)
+      : super(term, '²', typesToBracket: const [..._lowerOrderOperands, Cubed]);
 }
 
 class CubedWidget extends _PostfixOperationWidget {
-  const CubedWidget(Cubed node)
-      : super(node, '³',
+  const CubedWidget(Cubed term)
+      : super(term, '³',
             typesToBracket: const [..._lowerOrderOperands, Squared]);
 }
 
 class FactorialWidget extends _PostfixOperationWidget {
-  const FactorialWidget(Factorial node)
-      : super(node, '!', typesToBracket: _lowerOrderOperands);
+  const FactorialWidget(Factorial term)
+      : super(term, '!', typesToBracket: _lowerOrderOperands);
 }

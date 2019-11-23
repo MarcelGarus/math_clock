@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:math_clock/math/math.dart';
 
-import 'math_node_widget.dart';
+import 'term_widget.dart';
 import 'tight_text.dart';
 
-class _BinaryOperationWidget extends MathNodeWidget {
+class _BinaryOperationWidget extends TermWidget {
   const _BinaryOperationWidget(
-    MathNode node,
+    Term term,
     this.operation, {
     this.typesOfFirstToBracket = const [],
     this.typesOfSecondToBracket = const [],
   })  : assert(operation != null),
         assert(typesOfFirstToBracket != null),
         assert(typesOfSecondToBracket != null),
-        super(node);
+        super(term);
 
   final String operation;
   final List<Type> typesOfFirstToBracket;
@@ -35,31 +35,31 @@ class _BinaryOperationWidget extends MathNodeWidget {
 }
 
 class AddWidget extends _BinaryOperationWidget {
-  const AddWidget(Add node) : super(node, '+');
+  const AddWidget(Add term) : super(term, '+');
 }
 
 class SubtractWidget extends _BinaryOperationWidget {
-  const SubtractWidget(Subtract node)
-      : super(node, '-', typesOfSecondToBracket: const [Add]);
+  const SubtractWidget(Subtract term)
+      : super(term, '-', typesOfSecondToBracket: const [Add]);
 }
 
 class MultiplyWidget extends _BinaryOperationWidget {
-  const MultiplyWidget(Multiply node)
-      : super(node, '×',
+  const MultiplyWidget(Multiply term)
+      : super(term, '×',
             typesOfFirstToBracket: const [Add, Subtract, Modulo],
             typesOfSecondToBracket: const [Add, Subtract, Modulo]);
 }
 
 class DivideWidget extends _BinaryOperationWidget {
-  const DivideWidget(Divide node)
-      : super(node, '/',
+  const DivideWidget(Divide term)
+      : super(term, '/',
             typesOfFirstToBracket: const [Add, Subtract, Modulo],
             typesOfSecondToBracket: const [Add, Subtract, Multiply, Modulo]);
 }
 
 class ModuloWidget extends _BinaryOperationWidget {
-  const ModuloWidget(Modulo node)
-      : super(node, '%',
+  const ModuloWidget(Modulo term)
+      : super(term, '%',
             typesOfFirstToBracket: const [Add, Subtract, Multiply, Divide],
             typesOfSecondToBracket: const [Add, Subtract, Multiply, Divide]);
 }

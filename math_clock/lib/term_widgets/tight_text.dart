@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:math_clock/equation/theme.dart';
+
+import 'theme.dart';
 
 /// Displays text without space below the baseline.
 ///
@@ -9,6 +10,8 @@ import 'package:math_clock/equation/theme.dart';
 /// We don't want that, because none of the characters we're going to render is
 /// descending (we know that because all the digits and operators in the font
 /// we use don't descend).
+///
+/// Also uses the enclosing [TermTheme] to choose the color of the text.
 class TightText extends StatelessWidget {
   const TightText(this.data, {Key key})
       : assert(data != null),
@@ -28,7 +31,7 @@ class TightText extends StatelessWidget {
         strutStyle: StrutStyle(height: 0, forceStrutHeight: true),
         style: TextStyle(
           fontFamily: 'Arvo',
-          color: EquationTheme.of(context).color,
+          color: TermTheme.of(context).color,
           fontSize: 64,
         ),
       ),

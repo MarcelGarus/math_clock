@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:math_clock/math/math.dart';
 
-import 'math_node_widget.dart';
+import 'term_widget.dart';
 import 'theme.dart';
 
-class RootWidget extends MathNodeWidget {
-  const RootWidget(Root node) : super(node);
+class RootWidget extends TermWidget {
+  const RootWidget(Root root) : super(root);
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _RootPainter(color: EquationTheme.of(context).color),
+      painter: _RootPainter(color: TermTheme.of(context).color),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(38, 14, 12, 0),
-        child: MathNodeWidget(first),
+        child: TermWidget(first),
       ),
     );
   }
@@ -29,10 +29,15 @@ class _RootPainter extends CustomPainter {
     canvas.drawPath(
       Path()
         ..moveTo(0, size.height / 2)
+        // The small horizontal bar on the left.
         ..lineTo(10, size.height / 2)
+        // Go all the way down.
         ..lineTo(20, size.height - 8)
+        // Then, go way up again.
         ..lineTo(30, 4)
+        // A long horizontal bar above the child.
         ..lineTo(size.width - 4, 4)
+        // Finally, a quick stroke down to indicate the end of the root.
         ..lineTo(size.width - 4, 15),
       Paint()
         ..color = color

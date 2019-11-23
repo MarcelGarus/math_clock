@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:math_clock/math/math.dart';
 
-import 'math_node_widget.dart';
+import 'term_widget.dart';
 import 'theme.dart';
 
-class BracketsWidget extends MathNodeWidget {
-  const BracketsWidget(MathNode node)
-      : assert(node is! Number),
-        super(node);
+/// Displays brackets (that's "(" and ")") around the given [term].
+class BracketsWidget extends TermWidget {
+  const BracketsWidget(Term term, {Key key})
+      : assert(term is! Number), // Numbers should never be put in brackets.
+        super(term, key: key);
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _BracketsPainter(color: EquationTheme.of(context).color),
+      painter: _BracketsPainter(color: TermTheme.of(context).color),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        child: MathNodeWidget(node),
+        child: TermWidget(term),
       ),
     );
   }
@@ -30,10 +31,12 @@ class _BracketsPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.drawPath(
       Path()
+        // Left bracket.
         ..moveTo(16, 4)
         ..quadraticBezierTo(4, 0.2 * size.height, 4, size.height / 2)
         ..moveTo(16, size.height - 4)
         ..quadraticBezierTo(4, 0.8 * size.height, 4, size.height / 2)
+        // Right bracket.
         ..moveTo(size.width - 16, 4)
         ..quadraticBezierTo(
             size.width - 4, 0.2 * size.height, size.width - 4, size.height / 2)

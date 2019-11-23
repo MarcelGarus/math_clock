@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:math_clock/animated_equation.dart';
 import 'package:math_clock/math/math.dart';
 
-import 'equation/equation.dart';
+import 'term_widgets/term_widget.dart';
 import 'slanted_layout/slanted_layout.dart';
 
 class MathClock extends StatefulWidget {
@@ -19,8 +19,8 @@ class MathClock extends StatefulWidget {
 }
 
 class _MathClockState extends State<MathClock> {
-  MathNode _hourTerm;
-  MathNode _minuteTerm;
+  Term _hourTerm;
+  Term _minuteTerm;
 
   void _updateHour() => _hourTerm = generateMathTerm(widget.hour);
   void _updateMinute() => _minuteTerm = generateMathTerm(widget.minute);
@@ -60,7 +60,10 @@ class _MathClockState extends State<MathClock> {
             tag: _hourTerm,
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              child: Equation(_hourTerm, color: secondaryColor),
+              child: TermTheme(
+                data: TermThemeData(color: secondaryColor),
+                child: TermWidget(_hourTerm),
+              ),
             ),
           ),
           bottom: AnimatedClockContent(
@@ -68,7 +71,10 @@ class _MathClockState extends State<MathClock> {
             tag: _minuteTerm,
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              child: Equation(_minuteTerm, color: primaryColor),
+              child: TermTheme(
+                data: TermThemeData(color: primaryColor),
+                child: TermWidget(_minuteTerm),
+              ),
             ),
           ),
         ),
