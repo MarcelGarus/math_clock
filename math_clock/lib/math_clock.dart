@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:math_clock/animated_equation.dart';
+import 'package:math_clock/animated_content.dart';
 import 'package:math_clock/math/math.dart';
 
 import 'term_widgets/term_widget.dart';
 import 'slanted_layout/slanted_layout.dart';
+
+@immutable
+class MathClockThemeData {
+  MathClockThemeData({
+    this.topBackground,
+    this.topForeground,
+    this.bottomBackground,
+    this.bottomForeground,
+  })  : assert(topBackground != null),
+        assert(topForeground != null),
+        assert(bottomBackground != null),
+        assert(bottomForeground != null);
+
+  final Color topBackground;
+  final Color topForeground;
+  final Color bottomBackground;
+  final Color bottomForeground;
+}
 
 class MathClock extends StatefulWidget {
   const MathClock({Key key, @required this.hour, @required this.minute})
@@ -43,9 +61,32 @@ class _MathClockState extends State<MathClock> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Colors.white; //Colors.yellowAccent;
-    final secondaryColor =
-        Colors.black; //Color.lerp(Colors.deepPurple, Colors.black, 0.4);
+    final pinkChaiTheme = MathClockThemeData(
+      topBackground: Color(0xfff2dcd3),
+      topForeground: Color(0xff3b3638),
+      bottomBackground: Color(0xff85506e),
+      bottomForeground: Color(0xffeed7db),
+    );
+    final redGreenTheme = MathClockThemeData(
+      topBackground: Color(0xfffadae2),
+      topForeground: Color(0xffc8838b),
+      bottomBackground: Color(0xff22aa8d),
+      bottomForeground: Color(0xffafe3db),
+    );
+    final dawnTheme = MathClockThemeData(
+      topBackground: Color(0xffeba559),
+      topForeground: Color(0xff2e57ba),
+      bottomBackground: Color(0xff02284c),
+      bottomForeground: Color(0xffe6546c),
+    );
+    final androidTheme = MathClockThemeData(
+      topBackground: Color(0xffffffff),
+      topForeground: Color(0xff3ddb85),
+      bottomBackground: Color(0xff073042),
+      bottomForeground: Color(0xffeff7cf),
+    );
+
+    final theme = dawnTheme;
 
     return FittedBox(
       child: Container(
@@ -53,26 +94,26 @@ class _MathClockState extends State<MathClock> {
         height: 300,
         alignment: Alignment.center,
         child: SlantedLayout(
-          primaryColor: primaryColor,
-          secondaryColor: secondaryColor,
-          top: AnimatedClockContent(
+          topColor: theme.topBackground,
+          bottomColor: theme.bottomBackground,
+          top: AnimatedContent(
             alignment: Alignment.bottomLeft,
             tag: _hourTerm,
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: TermTheme(
-                data: TermThemeData(color: secondaryColor),
+                data: TermThemeData(color: theme.topForeground),
                 child: TermWidget(_hourTerm),
               ),
             ),
           ),
-          bottom: AnimatedClockContent(
+          bottom: AnimatedContent(
             alignment: Alignment.topRight,
             tag: _minuteTerm,
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: TermTheme(
-                data: TermThemeData(color: primaryColor),
+                data: TermThemeData(color: theme.bottomForeground),
                 child: TermWidget(_minuteTerm),
               ),
             ),

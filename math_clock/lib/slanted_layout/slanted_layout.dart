@@ -5,18 +5,18 @@ class SlantedLayout extends StatelessWidget {
     Key key,
     this.top,
     this.bottom,
-    this.primaryColor,
-    this.secondaryColor,
+    this.topColor,
+    this.bottomColor,
   })  : assert(top != null),
         assert(bottom != null),
-        assert(primaryColor != null),
-        assert(secondaryColor != null),
+        assert(topColor != null),
+        assert(bottomColor != null),
         super(key: key);
 
   final Widget top;
   final Widget bottom;
-  final Color primaryColor;
-  final Color secondaryColor;
+  final Color topColor;
+  final Color bottomColor;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,8 @@ class SlantedLayout extends StatelessWidget {
         Positioned.fill(
           child: CustomPaint(
             painter: _SlantedBackgroundPainter(
-              primaryColor: primaryColor,
-              secondaryColor: secondaryColor,
+              topColor: topColor,
+              bottomColor: bottomColor,
             ),
           ),
         ),
@@ -48,7 +48,7 @@ class SlantedLayout extends StatelessWidget {
           angle: -0.2,
           child: Container(
             width: 450,
-            height: 100,
+            height: 90,
             alignment: isTop ? Alignment.bottomLeft : Alignment.topRight,
             child: isTop ? top : bottom,
           ),
@@ -88,31 +88,31 @@ class _BottomSlantClipper extends CustomClipper<Path> {
 
 class _SlantedBackgroundPainter extends CustomPainter {
   _SlantedBackgroundPainter({
-    @required this.primaryColor,
-    @required this.secondaryColor,
-  })  : assert(primaryColor != null),
-        assert(secondaryColor != null);
+    @required this.topColor,
+    @required this.bottomColor,
+  })  : assert(topColor != null),
+        assert(bottomColor != null);
 
-  final Color primaryColor;
-  final Color secondaryColor;
+  final Color topColor;
+  final Color bottomColor;
 
   @override
   void paint(Canvas canvas, Size size) {
     canvas
       ..drawRect(
         Rect.fromLTWH(0, 0, size.width, size.height),
-        Paint()..color = primaryColor,
+        Paint()..color = topColor,
       )
       ..drawPath(
         _BottomSlantClipper().getClip(size),
-        Paint()..color = secondaryColor,
+        Paint()..color = bottomColor,
       );
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return !(oldDelegate is _SlantedBackgroundPainter &&
-        oldDelegate.primaryColor == primaryColor &&
-        oldDelegate.secondaryColor == secondaryColor);
+        oldDelegate.topColor == topColor &&
+        oldDelegate.bottomColor == bottomColor);
   }
 }
