@@ -6,7 +6,9 @@ import 'dart:async';
 
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:math_clock/math/math.dart';
+
+import 'slanted_layout/slanted_layout.dart';
 
 /// A basic digital clock.
 ///
@@ -21,8 +23,11 @@ class DigitalClock extends StatefulWidget {
 }
 
 class _DigitalClockState extends State<DigitalClock> {
-  DateTime _dateTime = DateTime.now();
   Timer _timer;
+  int _lastHour;
+  int _lastMinute;
+  MathNode _hourEquation;
+  MathNode _minuteEquation;
 
   @override
   void initState() {
@@ -57,47 +62,43 @@ class _DigitalClockState extends State<DigitalClock> {
 
   void _updateTime() {
     setState(() {
-      _dateTime = DateTime.now();
-      // Update once per minute. If you want to update every second, use the
-      // following code.
+      // Update once per minute.
+      final dateTime = DateTime.now();
+      final hour = dateTime.hour % (widget.model.is24HourFormat ? 24 : 12);
+      final minute = dateTime.minute;
+
+      if (hour != _lastHour) {
+        _lastHour = hour;
+        _hourEquation = createMathTree(hour);
+        print(_hourEquation);
+      }
+      if (minute != _lastMinute) {
+        _lastMinute = minute;
+        _minuteEquation = createMathTree(minute);
+        print(_minuteEquation);
+      }
+
       _timer = Timer(
         Duration(minutes: 1) -
-            Duration(seconds: _dateTime.second) -
-            Duration(milliseconds: _dateTime.millisecond),
+            Duration(seconds: dateTime.second) -
+            Duration(milliseconds: dateTime.millisecond),
         _updateTime,
       );
-      // Update once per second, but make sure to do it at the beginning of each
-      // new second, so that the clock is accurate.
-      // _timer = Timer(
-      //   Duration(seconds: 1) - Duration(milliseconds: _dateTime.millisecond),
-      //   _updateTime,
-      // );
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    /*final colors = Theme.of(context).brightness == Brightness.light
-        ? _lightTheme
-        : _darkTheme;*/
-    final hour =
-        DateFormat(widget.model.is24HourFormat ? 'HH' : 'hh').format(_dateTime);
-    final minute = DateFormat('mm').format(_dateTime);
-    final fontSize = MediaQuery.of(context).size.width / 5;
-    final offset = -fontSize / 7;
-    final defaultStyle = TextStyle(color: Colors.white, fontSize: fontSize);
-
-    return Container(
-      color: Colors.red,
-      child: Center(
-        child: DefaultTextStyle(
-          style: defaultStyle,
-          child: Stack(
-            children: <Widget>[
-              Positioned(left: offset, top: 0, child: Text(hour)),
-              Positioned(right: offset, bottom: offset, child: Text(minute)),
-            ],
-          ),
+    return FittedBox(
+      child: Container(
+        width: 500,
+        height: 300,
+        alignment: Alignment.center,
+        child: SlantedLayout(
+          hour: _hourEquation,
+          minute: _minuteEquation,
+          primaryColor: Color.lerp(Colors.deepPurple, Colors.black, 0.4),
+          secondaryColor: Colors.yellowAccent,
         ),
       ),
     );
