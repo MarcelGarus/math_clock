@@ -1,104 +1,76 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-import 'dart:async';
-
-import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
+import 'package:math_clock/animated_equation.dart';
 import 'package:math_clock/math/math.dart';
 
+import 'equation/equation.dart';
 import 'slanted_layout/slanted_layout.dart';
 
-/// A basic digital clock.
-///
-/// You can do better than this!
-class DigitalClock extends StatefulWidget {
-  const DigitalClock(this.model);
+class MathClock extends StatefulWidget {
+  const MathClock({Key key, @required this.hour, @required this.minute})
+      : assert(hour != null),
+        assert(minute != null),
+        super(key: key);
 
-  final ClockModel model;
+  final int hour;
+  final int minute;
 
   @override
-  _DigitalClockState createState() => _DigitalClockState();
+  _MathClockState createState() => _MathClockState();
 }
 
-class _DigitalClockState extends State<DigitalClock> {
-  Timer _timer;
-  int _lastHour;
-  int _lastMinute;
-  MathNode _hourEquation;
-  MathNode _minuteEquation;
+class _MathClockState extends State<MathClock> {
+  MathNode _hourTerm;
+  MathNode _minuteTerm;
+
+  void _updateHour() => _hourTerm = generateMathTerm(widget.hour);
+  void _updateMinute() => _minuteTerm = generateMathTerm(widget.minute);
 
   @override
   void initState() {
     super.initState();
-    widget.model.addListener(_updateModel);
-    _updateTime();
-    _updateModel();
+
+    _updateHour();
+    _updateMinute();
   }
 
   @override
-  void didUpdateWidget(DigitalClock oldWidget) {
+  void didUpdateWidget(MathClock oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.model != oldWidget.model) {
-      oldWidget.model.removeListener(_updateModel);
-      widget.model.addListener(_updateModel);
-    }
-  }
 
-  @override
-  void dispose() {
-    _timer?.cancel();
-    widget.model.removeListener(_updateModel);
-    widget.model.dispose();
-    super.dispose();
-  }
-
-  void _updateModel() {
-    setState(() {
-      // Cause the clock to rebuild when the model changes.
-    });
-  }
-
-  void _updateTime() {
-    setState(() {
-      // Update once per minute.
-      final dateTime = DateTime.now();
-      final hour = dateTime.hour % (widget.model.is24HourFormat ? 24 : 12);
-      final minute = dateTime.minute;
-
-      if (hour != _lastHour) {
-        _lastHour = hour;
-        _hourEquation = createMathTree(hour);
-        print(_hourEquation);
-      }
-      if (minute != _lastMinute) {
-        _lastMinute = minute;
-        _minuteEquation = createMathTree(minute);
-        print(_minuteEquation);
-      }
-
-      _timer = Timer(
-        Duration(minutes: 1) -
-            Duration(seconds: dateTime.second) -
-            Duration(milliseconds: dateTime.millisecond),
-        _updateTime,
-      );
-    });
+    if (oldWidget.hour != widget.hour) setState(_updateHour);
+    if (oldWidget.minute != widget.minute) setState(_updateMinute);
   }
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Colors.white; //Colors.yellowAccent;
+    final secondaryColor =
+        Colors.black; //Color.lerp(Colors.deepPurple, Colors.black, 0.4);
+
     return FittedBox(
       child: Container(
         width: 500,
         height: 300,
         alignment: Alignment.center,
         child: SlantedLayout(
-          hour: _hourEquation,
-          minute: _minuteEquation,
-          primaryColor: Color.lerp(Colors.deepPurple, Colors.black, 0.4),
-          secondaryColor: Colors.yellowAccent,
+          primaryColor: primaryColor,
+          secondaryColor: secondaryColor,
+          top: AnimatedClockContent(
+            alignment: Alignment.bottomLeft,
+            tag: _hourTerm,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Equation(_hourTerm, color: secondaryColor),
+            ),
+          ),
+          bottom: AnimatedClockContent(
+            alignment: Alignment.topRight,
+            tag: _minuteTerm,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Equation(_minuteTerm, color: primaryColor),
+            ),
+          ),
         ),
       ),
     );

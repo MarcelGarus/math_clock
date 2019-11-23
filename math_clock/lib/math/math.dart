@@ -1,4 +1,4 @@
 // Math operations on the data level.
 
 export 'nodes.dart';
-export 'tree_generator.dart' show createMathTree;
+export 'term_generator.dart' show createMathTerm;

@@ -1,16 +1,20 @@
-import 'dart:math';
+import 'dart:math' show Random;
+
+import 'package:flutter/foundation.dart';
 
 import 'nodes.dart';
+import 'utils.dart';
 
-T chooseRandomOf<T>(List<T> items) => items[Random().nextInt(items.length)];
+/// The maximum value of a math term or subterm.
+const _maximumValue = 100;
 
-int squared(int number) => pow(number, 2);
-int cubed(int number) => pow(number, 3);
+/// The maximum base of a [Modulo] operation.
+const _maximumModuloBase = 10;
 
 // Creates a node from the number, then makes that node more complicated a few
 // times. While doing this, use every operand at least once.
-MathNode createMathTree(int number) {
-  MathNode node = Number(number);
+MathNode generateMathTerm(int number) {
+  assert(number != null);
 
   // All the possible types that still can be used. The set is mutable and the
   // [makeMoreComplicated] method removes types, so over time there are less
@@ -27,11 +31,14 @@ MathNode createMathTree(int number) {
     Factorial, // a!
   };
 
-  // Make the node more complicated a few times.
+  // Create a node and make it more complicated a few times.
   var complexity = 2 + Random().nextInt(2);
+  MathNode node = Number(number);
+
   for (var step = 0; step < complexity; step++) {
     node = _makeMoreComplicated(node, possibleTypes);
   }
+
   return node;
 }
 
@@ -86,52 +93,51 @@ MathNode _makeMoreComplicated(MathNode node, Set<Type> possibleTypes) {
 }
 
 MathNode _makeNumberMoreComplicated({
-  int number,
-  bool Function(Type type) isPossible,
+  @required int number,
+  @required bool Function(Type type) isPossible,
 }) {
-  // Create a list of replacements wrapped inside replacement categories
-  // according to their subjective coolness.
+  // It would not be enough to just create a list of all possible replacements
+  // and then choose a random one, because there are so many more addition
+  // operations possible than factorial ones.
+  // That's why we have multiple replacement categories, each containing only
+  // operations which are about equally rare. Categories with more rare
+  // replacements are first in the following list.
   final replacementCategories = [
-    // Amazingly cool replacements.
-    // Faculty operations are really rarely applicable, so if they can be used,
-    // they should almost always be used.
+    /// Amazingly rare replacements: [Factorial]
     [
-      if (isPossible(Factorial)) ...[
-        if (number == 6) Factorial(Number(3)),
-        if (number == 24) Factorial(Number(4)),
-      ],
+      if (isPossible(Factorial))
+        for (var i = 0; factorial(i) <= _maximumValue; i++)
+          if (number == factorial(i)) Factorial(Number(i)),
     ],
-    // Cool replacements.
-    // Squared, cubed and root operations are still quite rare, so they should
-    // also be used most of the time when they can be applied.
+
+    /// Rare replacements: [Squared], [Cubed], [Root]
     [
       if (isPossible(Squared))
-        for (var i = 2; squared(i) <= number; i++)
+        for (var i = 0; squared(i) <= number; i++)
           if (i * i == number) Squared(Number(i)),
       if (isPossible(Cubed))
         for (var i = 0; cubed(i) <= number; i++)
           if (cubed(i) == number) Cubed(Number(i)),
       if (isPossible(Root))
-        if (squared(number) <= 100) Root(Number(squared(number))),
+        if (squared(number) <= _maximumValue) Root(Number(squared(number))),
     ],
-    // Okay-ish replacements.
-    // Multiplying and dividing numbers is also okay, but more common.
+
+    /// Common replacements: [Multiply], [Divide], [Modulo]
     [
       if (isPossible(Divide) && number > 0)
-        for (var i = 2; i * number <= 100; i++)
+        for (var i = 2; i * number <= _maximumValue; i++)
           Divide(Number(i * number), Number(i)),
       if (isPossible(Multiply))
         for (var i = 2; i < number; i++)
           if (number % i == 0 && i != number ~/ i)
             Multiply(Number(i), Number(number ~/ i)),
-      if (isPossible(Modulo) && number < 10)
-        for (var base = 2; base < number; base++)
-          for (var i = number; i < 100; i += base)
+      if (isPossible(Modulo))
+        for (var base = number + 1; base <= _maximumModuloBase; base++)
+          for (var i = number; i <= _maximumValue; i += base)
             Modulo(Number(i), Number(base)),
     ],
-    // Meh replacements.
-    // Addition and subtraction work all the time, so these are at the bottom
-    // of the coolness hierarchy.
+
+    /// Very common replacements: [Add], [Subtract]
     [
       if (isPossible(Add))
         for (var i = 1; i < number; i++) Add(Number(i), Number(number - i)),
@@ -143,8 +149,7 @@ MathNode _makeNumberMoreComplicated({
 
   if (replacementCategories.isEmpty) {
     // Not a single replacement can be applied to this number (that probably
-    // means we used up the addition and subtraction and the others don't
-    // apply).
+    // means we used up the [Add] and [Subtract] and the others don't apply).
     // In that case, just return the same unchanged number.
     return Number(number);
   }
@@ -155,6 +160,6 @@ MathNode _makeNumberMoreComplicated({
   }
   final chosenCategory = replacementCategories.first;
 
-  // Within a category, we choose randomly.
+  // Within the chosen category, we choose randomly.
   return chooseRandomOf(chosenCategory);
 }

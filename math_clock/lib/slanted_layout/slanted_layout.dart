@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:math_clock/equation/equation.dart';
-import 'package:math_clock/math/math.dart';
 
 class SlantedLayout extends StatelessWidget {
   const SlantedLayout({
     Key key,
-    this.hour,
-    this.minute,
+    this.top,
+    this.bottom,
     this.primaryColor,
     this.secondaryColor,
-  })  : assert(hour != null),
-        assert(minute != null),
+  })  : assert(top != null),
+        assert(bottom != null),
         assert(primaryColor != null),
         assert(secondaryColor != null),
         super(key: key);
 
-  final MathNode hour;
-  final MathNode minute;
+  final Widget top;
+  final Widget bottom;
   final Color primaryColor;
   final Color secondaryColor;
 
@@ -32,44 +30,60 @@ class SlantedLayout extends StatelessWidget {
             ),
           ),
         ),
-        Positioned(
-          left: 40,
-          top: -20,
-          child: Transform.rotate(
-            angle: -0.2,
-            child: Container(
-              width: 400,
-              height: 150,
-              alignment: Alignment.bottomLeft,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Equation(hour, color: secondaryColor),
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          right: 40,
-          bottom: -20,
-          child: Transform.rotate(
-            angle: -0.2,
-            child: Transform.scale(
-              scale: 1,
-              child: Container(
-                width: 400,
-                height: 150,
-                alignment: Alignment.topRight,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Equation(minute, color: primaryColor),
-                ),
-              ),
-            ),
-          ),
-        ),
+        _buildContent(true),
+        _buildContent(false),
       ],
     );
   }
+
+  Widget _buildContent(bool isTop) {
+    return ClipPath(
+      clipper: isTop ? _TopSlantClipper() : _BottomSlantClipper(),
+      child: Container(
+        width: 500,
+        height: 300,
+        alignment: isTop ? Alignment.topLeft : Alignment.bottomRight,
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+        child: Transform.rotate(
+          angle: -0.2,
+          child: Container(
+            width: 450,
+            height: 100,
+            alignment: isTop ? Alignment.bottomLeft : Alignment.topRight,
+            child: isTop ? top : bottom,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TopSlantClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    return Path()
+      ..moveTo(0, 200)
+      ..lineTo(500, 100)
+      ..lineTo(500, 0)
+      ..lineTo(0, 0);
+  }
+
+  @override
+  bool shouldReclip(CustomClipper oldClipper) => false;
+}
+
+class _BottomSlantClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    return Path()
+      ..moveTo(0, 200)
+      ..lineTo(500, 100)
+      ..lineTo(500, 300)
+      ..lineTo(0, 300);
+  }
+
+  @override
+  bool shouldReclip(CustomClipper oldClipper) => false;
 }
 
 class _SlantedBackgroundPainter extends CustomPainter {
@@ -90,11 +104,7 @@ class _SlantedBackgroundPainter extends CustomPainter {
         Paint()..color = primaryColor,
       )
       ..drawPath(
-        Path()
-          ..moveTo(0, 200)
-          ..lineTo(500, 100)
-          ..lineTo(500, 300)
-          ..lineTo(0, 300),
+        _BottomSlantClipper().getClip(size),
         Paint()..color = secondaryColor,
       );
   }
