@@ -87,8 +87,33 @@ class _MathClockState extends State<MathClock> {
       bottomForeground: Color(0xffeff7cf),
     );
 
-    final theme = dawnTheme;
+    final theme = redGreenTheme;
 
+    return MathClockDisplay(
+      theme: theme,
+      hourTerm: _hourTerm,
+      minuteTerm: _minuteTerm,
+    );
+  }
+}
+
+class MathClockDisplay extends StatelessWidget {
+  const MathClockDisplay({
+    Key key,
+    @required this.theme,
+    @required this.hourTerm,
+    @required this.minuteTerm,
+  })  : assert(theme != null),
+        assert(hourTerm != null),
+        assert(minuteTerm != null),
+        super(key: key);
+
+  final MathClockThemeData theme;
+  final Term hourTerm;
+  final Term minuteTerm;
+
+  @override
+  Widget build(BuildContext context) {
     return FittedBox(
       child: Container(
         width: 500,
@@ -99,23 +124,23 @@ class _MathClockState extends State<MathClock> {
           bottomColor: theme.bottomBackground,
           top: AnimatedContent(
             alignment: Alignment.bottomLeft,
-            tag: _hourTerm,
+            tag: hourTerm,
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: TermTheme(
                 data: TermThemeData(color: theme.topForeground),
-                child: TermWidget(_hourTerm),
+                child: TermWidget(hourTerm),
               ),
             ),
           ),
           bottom: AnimatedContent(
             alignment: Alignment.topRight,
-            tag: _minuteTerm,
+            tag: minuteTerm,
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: TermTheme(
                 data: TermThemeData(color: theme.bottomForeground),
-                child: TermWidget(_minuteTerm),
+                child: TermWidget(minuteTerm),
               ),
             ),
           ),
