@@ -1,3 +1,6 @@
+# Promo video render outputs
+promo_video/output/theme_dawn/
+
 # Miscellaneous
 *.class
 *.log

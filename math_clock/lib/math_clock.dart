@@ -61,6 +61,7 @@ class _MathClockState extends State<MathClock> {
 
   @override
   Widget build(BuildContext context) {
+    // Weather is either: cloudy, foggy, rainy, snowy, sunny, thunderstorm, windy
     final pinkChaiTheme = MathClockThemeData(
       topBackground: Color(0xfff2dcd3),
       topForeground: Color(0xff3b3638),
@@ -71,7 +72,7 @@ class _MathClockState extends State<MathClock> {
       topBackground: Color(0xfffadae2),
       topForeground: Color(0xffc8838b),
       bottomBackground: Color(0xff22aa8d),
-      bottomForeground: Color(0xffafe3db),
+      bottomForeground: Color(0xffbff3eb),
     );
     final dawnTheme = MathClockThemeData(
       topBackground: Color(0xffeba559),
