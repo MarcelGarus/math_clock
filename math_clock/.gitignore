@@ -1,5 +1,13 @@
 # Promo video render outputs
 promo_video/output/theme_dawn/
+promo_video/input/theme_android/*.png
+promo_video/input/theme_android/screencast.mp4
+promo_video/input/theme_pink_chai/*.png
+promo_video/input/theme_pink_chai/screencast.mp4
+promo_video/input/theme_dawn/*.png
+promo_video/input/theme_dawn/screencast.mp4
+promo_video/input/theme_red_green/*.png
+promo_video/input/theme_red_green/screencast.mp4
 
 # Miscellaneous
 *.class
