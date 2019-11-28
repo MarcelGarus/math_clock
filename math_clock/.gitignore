@@ -1,5 +1,6 @@
 # Promo video render outputs
 promo_video/output/theme_dawn/
+promo_video/output/theme_android/
 promo_video/input/theme_android/*.png
 promo_video/input/theme_android/screencast.mp4
 promo_video/input/theme_pink_chai/*.png
