@@ -1,4 +1,5 @@
-// Math operations on the data level.
+// Operations on the Flutter-independent math level.
+// This folder offers tools for generating terms.
 
 export 'terms.dart';
-export 'term_generator.dart' show generateMathTerm;
+export 'generator.dart' show generateMathTerm;

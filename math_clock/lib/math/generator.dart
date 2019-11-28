@@ -5,14 +5,18 @@ import 'package:flutter/foundation.dart';
 import 'terms.dart';
 import 'utils.dart';
 
-/// The maximum value of a math term or subterm.
+/// The inclusive maximum value of a math term.
+/// If you would call [compute] on every instance of [Term], all of these
+/// computations would yield results in the inclusive range from 0 to
+/// [_maximumValue].
 const _maximumValue = 100;
 
-/// The maximum base of a [Modulo] operation.
-const _maximumModuloBase = 10;
+/// The maximum divisor of a [Modulo] operation.
+const _maximumModuloDivisor = 10;
 
+/// Creates a complicated [Term] that evalutes to the given [number].
 // Creates a node from the number, then makes that node more complicated a few
-// times. While doing this, use every operand at least once.
+// times. While doing so, uses every operator at most once.
 Term generateMathTerm(int number) {
   assert(number != null);
 
@@ -31,7 +35,7 @@ Term generateMathTerm(int number) {
     Factorial, // a!
   };
 
-  // Create a node and make it more complicated a few times.
+  // Create a node from the number and make it more complicated a few times.
   var complexity = 2 + Random().nextInt(2);
   Term node = Number(number);
 
@@ -70,6 +74,9 @@ Term _makeMoreComplicated(Term node, Set<Type> possibleTypes) {
   // Using the replacement, we disallow some types of operations to be used
   // in further complications.
   possibleTypes.removeAll({
+    // Every operation should only be used at most once in order to get great,
+    // diverse terms. So, the replacement's type should not be used a second
+    // time.
     type,
 
     // If we allow square and root operations to be used in the same equation,
@@ -97,8 +104,8 @@ Term _makeNumberMoreComplicated({
   @required bool Function(Type type) isPossible,
 }) {
   // It would not be enough to just create a list of all possible replacements
-  // and then choose a random one, because there are so many more addition
-  // operations possible than factorial ones.
+  // and then choose a random one, because for example, there are so many more
+  // addition operations possible than factorial ones.
   // That's why we have multiple replacement categories, each containing only
   // operations which are about equally rare. Categories with more rare
   // replacements are first in the following list.
@@ -132,7 +139,7 @@ Term _makeNumberMoreComplicated({
           if (number % i == 0 && i != number ~/ i)
             Multiply(Number(i), Number(number ~/ i)),
       if (isPossible(Modulo))
-        for (var base = number + 1; base <= _maximumModuloBase; base++)
+        for (var base = number + 1; base <= _maximumModuloDivisor; base++)
           for (var i = number; i <= _maximumValue; i += base)
             Modulo(Number(i), Number(base)),
     ],
@@ -148,8 +155,7 @@ Term _makeNumberMoreComplicated({
   ]..removeWhere((category) => category.isEmpty);
 
   if (replacementCategories.isEmpty) {
-    // Not a single replacement can be applied to this number (that probably
-    // means we used up the [Add] and [Subtract] and the others don't apply).
+    // Not a single replacement can be applied to this number.
     // In that case, just return the same unchanged number.
     return Number(number);
   }

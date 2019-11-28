@@ -1,3 +1,5 @@
+/// Utility functions that are used in this folder.
+
 import 'dart:math' as math;
 
 T chooseRandomOf<T>(List<T> items) =>
