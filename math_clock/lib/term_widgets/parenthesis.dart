@@ -4,16 +4,17 @@ import 'package:math_clock/math/math.dart';
 import 'term_widget.dart';
 import 'theme.dart';
 
-/// Displays brackets (that's "(" and ")") around the given [term].
-class BracketsWidget extends TermWidget {
-  const BracketsWidget(Term term, {Key key})
-      : assert(term is! Number), // Numbers should never be put in brackets.
-        super(term, key: key);
+/// Displays parenthesis (that's "(" and ")") around the given [term].
+class ParenthesisWidget extends TermWidget {
+  const ParenthesisWidget(Term term)
+      : assert(
+            term is! Number, 'Numbers should never be put into parenthesis.'),
+        super(term);
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _BracketsPainter(color: TermTheme.of(context).color),
+      painter: _ParenthesisPainter(color: TermTheme.of(context).color),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         child: TermWidget(term),
@@ -22,8 +23,8 @@ class BracketsWidget extends TermWidget {
   }
 }
 
-class _BracketsPainter extends CustomPainter {
-  _BracketsPainter({@required this.color}) : assert(color != null);
+class _ParenthesisPainter extends CustomPainter {
+  _ParenthesisPainter({@required this.color}) : assert(color != null);
 
   final Color color;
 
@@ -51,6 +52,6 @@ class _BracketsPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_BracketsPainter oldDelegate) =>
+  bool shouldRepaint(_ParenthesisPainter oldDelegate) =>
       oldDelegate.color != color;
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:math_clock/math/math.dart';
 
 import 'binary_operations.dart';
-import 'brackets.dart';
+import 'parenthesis.dart';
 import 'number.dart';
 import 'root.dart';
 import 'postfix_operations.dart';
@@ -10,15 +10,27 @@ import 'postfix_operations.dart';
 export 'theme.dart';
 
 /// A widget that displays the given [term].
+/// Optionally, you can also provide a set of [typesToParenthesise]. If the
+/// widget's runtime type is included into the [typesToParenthesise], the term
+/// is wrapped in a [ParenthesisWidget].
 class TermWidget extends StatelessWidget {
-  const TermWidget(this.term, {Key key}) : super(key: key);
+  const TermWidget(
+    this.term, {
+    this.typesToParenthesise = const {},
+  }) : assert(typesToParenthesise != null);
 
   final Term term;
   Term get first => term.children.first;
   Term get second => term.children[1];
 
+  final Set<Type> typesToParenthesise;
+
   @override
   Widget build(BuildContext context) {
+    if (typesToParenthesise.contains(term.runtimeType)) {
+      return ParenthesisWidget(term);
+    }
+
     switch (term.runtimeType) {
       case Number:
         return NumberWidget(term);
@@ -44,14 +56,4 @@ class TermWidget extends StatelessWidget {
         return Text('unknown type ${term.runtimeType}');
     }
   }
-}
-
-/// Returns a widget that renders the given [term].
-///
-/// If the [term]'s runtime type is included in the list of [typesToBracket],
-/// puts the term into a [BracketsWidget].
-Widget bracketIfTypeOf(Term term, List<Type> typesToBracket) {
-  return (typesToBracket.contains(term.runtimeType))
-      ? BracketsWidget(term)
-      : TermWidget(term);
 }

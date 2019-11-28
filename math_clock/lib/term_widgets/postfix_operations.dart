@@ -4,47 +4,66 @@ import 'package:math_clock/math/math.dart';
 import 'term_widget.dart';
 import 'tight_text.dart';
 
-/// Renders a term which is a postfix operation (something just written after
-/// the operand), like x², x³ or x!.
+/// Displays a postfix operation.
+///
+/// All postfix operations display the operand and behind it, the operation
+/// ifself. This widget makes it easy to render such a widget:
+/// You simply provide a [term] with a single child and the text of the
+/// [operation] itself.
+/// Also, you have the option to provide a collection of types that should be
+/// put in parenthesis for the operand. If the operand is of one of the given
+/// types, a bracket (that's the "(" and ")" parenthesises) are rendered around
+/// the term.
 class _PostfixOperationWidget extends TermWidget {
-  const _PostfixOperationWidget(
-    Term term,
-    this.operation, {
-    Key key,
-    this.typesToBracket = const [],
-  })  : assert(operation != null),
-        assert(typesToBracket != null),
-        super(term, key: key);
+  const _PostfixOperationWidget({
+    @required Term term,
+    @required this.operation,
+    this.typesToParenthesise = const {},
+  })  : assert(term != null),
+        assert(operation != null),
+        assert(typesToParenthesise != null),
+        super(term);
 
   final String operation;
-  final List<Type> typesToBracket;
+  final Set<Type> typesToParenthesise;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        bracketIfTypeOf(first, typesToBracket),
+        TermWidget(first, typesToParenthesise: typesToParenthesise),
         TightText(operation),
       ],
     );
   }
 }
 
-const _lowerOrderOperands = [Add, Subtract, Multiply, Divide, Modulo];
+const _lowerOrderOperands = {Add, Subtract, Multiply, Divide, Modulo};
 
 class SquaredWidget extends _PostfixOperationWidget {
   const SquaredWidget(Squared term)
-      : super(term, '²', typesToBracket: const [..._lowerOrderOperands, Cubed]);
+      : super(
+          term: term,
+          operation: '²',
+          typesToParenthesise: const {..._lowerOrderOperands, Cubed},
+        );
 }
 
 class CubedWidget extends _PostfixOperationWidget {
   const CubedWidget(Cubed term)
-      : super(term, '³',
-            typesToBracket: const [..._lowerOrderOperands, Squared]);
+      : super(
+          term: term,
+          operation: '³',
+          typesToParenthesise: const {..._lowerOrderOperands, Squared},
+        );
 }
 
 class FactorialWidget extends _PostfixOperationWidget {
   const FactorialWidget(Factorial term)
-      : super(term, '!', typesToBracket: _lowerOrderOperands);
+      : super(
+          term: term,
+          operation: '!',
+          typesToParenthesise: _lowerOrderOperands,
+        );
 }
