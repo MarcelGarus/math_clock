@@ -1,0 +1,1 @@
+In order to render terms, our job is to convert a term (which is a tree of terms) into a widget tree.
