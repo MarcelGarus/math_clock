@@ -6,18 +6,20 @@ import 'theme.dart';
 
 /// Displays parenthesis (that's "(" and ")") around the given [term].
 class ParenthesisWidget extends TermWidget {
-  const ParenthesisWidget(Term term)
+  const ParenthesisWidget({@required Term term})
       : assert(
-            term is! Number, 'Numbers should never be put into parenthesis.'),
-        super(term);
+          term is! Number,
+          'Numbers should never be put into parenthesis.',
+        ),
+        super(term: term);
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: _ParenthesisPainter(color: TermTheme.of(context).color),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        child: TermWidget(term),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        child: TermWidget(term: term),
       ),
     );
   }

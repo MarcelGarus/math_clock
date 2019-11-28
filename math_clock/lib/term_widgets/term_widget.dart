@@ -14,10 +14,11 @@ export 'theme.dart';
 /// widget's runtime type is included into the [typesToParenthesise], the term
 /// is wrapped in a [ParenthesisWidget].
 class TermWidget extends StatelessWidget {
-  const TermWidget(
-    this.term, {
+  const TermWidget({
+    @required this.term,
     this.typesToParenthesise = const {},
-  }) : assert(typesToParenthesise != null);
+  })  : assert(term != null),
+        assert(typesToParenthesise != null);
 
   final Term term;
   Term get first => term.children.first;
@@ -28,30 +29,30 @@ class TermWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (typesToParenthesise.contains(term.runtimeType)) {
-      return ParenthesisWidget(term);
+      return ParenthesisWidget(term: term);
     }
 
     switch (term.runtimeType) {
       case Number:
-        return NumberWidget(term);
+        return NumberWidget(term: term);
       case Add:
-        return AddWidget(term);
+        return AddWidget(term: term);
       case Subtract:
-        return SubtractWidget(term);
+        return SubtractWidget(term: term);
       case Multiply:
-        return MultiplyWidget(term);
+        return MultiplyWidget(term: term);
       case Divide:
-        return DivideWidget(term);
+        return DivideWidget(term: term);
       case Modulo:
-        return ModuloWidget(term);
+        return ModuloWidget(term: term);
       case Squared:
-        return SquaredWidget(term);
+        return SquaredWidget(term: term);
       case Cubed:
-        return CubedWidget(term);
+        return CubedWidget(term: term);
       case Factorial:
-        return FactorialWidget(term);
+        return FactorialWidget(term: term);
       case Root:
-        return RootWidget(term);
+        return RootWidget(term: term);
       default:
         return Text('unknown type ${term.runtimeType}');
     }

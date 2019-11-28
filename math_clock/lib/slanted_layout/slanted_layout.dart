@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 
 class SlantedLayout extends StatelessWidget {
   const SlantedLayout({
-    Key key,
-    this.top,
-    this.bottom,
-    this.topColor,
-    this.bottomColor,
+    @required this.top,
+    @required this.bottom,
+    @required this.topColor,
+    @required this.bottomColor,
   })  : assert(top != null),
         assert(bottom != null),
         assert(topColor != null),
-        assert(bottomColor != null),
-        super(key: key);
+        assert(bottomColor != null);
 
   final Widget top;
   final Widget bottom;

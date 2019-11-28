@@ -6,7 +6,7 @@ import 'tight_text.dart';
 
 /// Renders a single [Number].
 class NumberWidget extends TermWidget {
-  const NumberWidget(Number number) : super(number);
+  const NumberWidget({@required Number term}) : super(term: term);
 
   @override
   Widget build(BuildContext context) {

@@ -27,7 +27,7 @@ class _BinaryOperationWidget extends TermWidget {
         assert(operation != null),
         assert(typesOfFirstToParenthesise != null),
         assert(typesOfSecondToParenthesise != null),
-        super(term);
+        super(term: term);
 
   final String operation;
   final Set<Type> typesOfFirstToParenthesise;
@@ -38,22 +38,28 @@ class _BinaryOperationWidget extends TermWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        TermWidget(first, typesToParenthesise: typesOfFirstToParenthesise),
+        TermWidget(
+          term: first,
+          typesToParenthesise: typesOfFirstToParenthesise,
+        ),
         SizedBox(width: 8),
         TightText(operation),
         SizedBox(width: 8),
-        TermWidget(second, typesToParenthesise: typesOfSecondToParenthesise),
+        TermWidget(
+          term: second,
+          typesToParenthesise: typesOfSecondToParenthesise,
+        ),
       ],
     );
   }
 }
 
 class AddWidget extends _BinaryOperationWidget {
-  const AddWidget(Add term) : super(term: term, operation: '+');
+  const AddWidget({@required Add term}) : super(term: term, operation: '+');
 }
 
 class SubtractWidget extends _BinaryOperationWidget {
-  const SubtractWidget(Subtract term)
+  const SubtractWidget({@required Subtract term})
       : super(
           term: term,
           operation: '-',
@@ -62,7 +68,7 @@ class SubtractWidget extends _BinaryOperationWidget {
 }
 
 class MultiplyWidget extends _BinaryOperationWidget {
-  const MultiplyWidget(Multiply term)
+  const MultiplyWidget({@required Multiply term})
       : super(
           term: term,
           operation: '×',
@@ -72,7 +78,7 @@ class MultiplyWidget extends _BinaryOperationWidget {
 }
 
 class DivideWidget extends _BinaryOperationWidget {
-  const DivideWidget(Divide term)
+  const DivideWidget({@required Divide term})
       : super(
           term: term,
           operation: '/',
@@ -82,7 +88,7 @@ class DivideWidget extends _BinaryOperationWidget {
 }
 
 class ModuloWidget extends _BinaryOperationWidget {
-  const ModuloWidget(Modulo term)
+  const ModuloWidget({@required Modulo term})
       : super(
           term: term,
           operation: '%',

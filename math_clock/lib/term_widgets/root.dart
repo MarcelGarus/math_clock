@@ -5,15 +5,15 @@ import 'term_widget.dart';
 import 'theme.dart';
 
 class RootWidget extends TermWidget {
-  const RootWidget(Root root) : super(root);
+  const RootWidget({@required Root term}) : super(term: term);
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: _RootPainter(color: TermTheme.of(context).color),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(38, 14, 12, 0),
-        child: TermWidget(first),
+        padding: EdgeInsets.fromLTRB(38, 14, 12, 0),
+        child: TermWidget(term: first),
       ),
     );
   }

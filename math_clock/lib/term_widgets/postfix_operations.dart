@@ -22,7 +22,7 @@ class _PostfixOperationWidget extends TermWidget {
   })  : assert(term != null),
         assert(operation != null),
         assert(typesToParenthesise != null),
-        super(term);
+        super(term: term);
 
   final String operation;
   final Set<Type> typesToParenthesise;
@@ -32,7 +32,7 @@ class _PostfixOperationWidget extends TermWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        TermWidget(first, typesToParenthesise: typesToParenthesise),
+        TermWidget(term: first, typesToParenthesise: typesToParenthesise),
         TightText(operation),
       ],
     );
@@ -42,7 +42,7 @@ class _PostfixOperationWidget extends TermWidget {
 const _lowerOrderOperands = {Add, Subtract, Multiply, Divide, Modulo};
 
 class SquaredWidget extends _PostfixOperationWidget {
-  const SquaredWidget(Squared term)
+  const SquaredWidget({@required Squared term})
       : super(
           term: term,
           operation: '²',
@@ -51,7 +51,7 @@ class SquaredWidget extends _PostfixOperationWidget {
 }
 
 class CubedWidget extends _PostfixOperationWidget {
-  const CubedWidget(Cubed term)
+  const CubedWidget({@required Cubed term})
       : super(
           term: term,
           operation: '³',
@@ -60,7 +60,7 @@ class CubedWidget extends _PostfixOperationWidget {
 }
 
 class FactorialWidget extends _PostfixOperationWidget {
-  const FactorialWidget(Factorial term)
+  const FactorialWidget({@required Factorial term})
       : super(
           term: term,
           operation: '!',
