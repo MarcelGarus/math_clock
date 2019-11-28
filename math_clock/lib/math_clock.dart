@@ -1,33 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:math_clock/animated_content.dart';
 import 'package:math_clock/math/math.dart';
+import 'package:math_clock/theme.dart';
 
-import 'term_widgets/term_widget.dart';
+import 'term_widgets/shadowed_term_widget.dart';
 import 'slanted_layout/slanted_layout.dart';
 
-@immutable
-class MathClockThemeData {
-  MathClockThemeData({
-    this.topBackground,
-    this.topForeground,
-    this.bottomBackground,
-    this.bottomForeground,
-  })  : assert(topBackground != null),
-        assert(topForeground != null),
-        assert(bottomBackground != null),
-        assert(bottomForeground != null);
-
-  final Color topBackground;
-  final Color topForeground;
-  final Color bottomBackground;
-  final Color bottomForeground;
-}
-
 class MathClock extends StatefulWidget {
-  const MathClock({Key key, @required this.hour, @required this.minute})
+  const MathClock({@required this.hour, @required this.minute})
       : assert(hour != null),
-        assert(minute != null),
-        super(key: key);
+        assert(minute != null);
 
   final int hour;
   final int minute;
@@ -61,36 +43,8 @@ class _MathClockState extends State<MathClock> {
 
   @override
   Widget build(BuildContext context) {
-    // Weather is either: cloudy, foggy, rainy, snowy, sunny, thunderstorm, windy
-    final pinkChaiTheme = MathClockThemeData(
-      topBackground: Color(0xfff2dcd3),
-      topForeground: Color(0xff3b3638),
-      bottomBackground: Color(0xff85506e),
-      bottomForeground: Color(0xffeed7db),
-    );
-    final redGreenTheme = MathClockThemeData(
-      topBackground: Color(0xfffadae2),
-      topForeground: Color(0xffc8838b),
-      bottomBackground: Color(0xff22aa8d),
-      bottomForeground: Color(0xffbff3eb),
-    );
-    final dawnTheme = MathClockThemeData(
-      topBackground: Color(0xffeba559),
-      topForeground: Color(0xff2e57ba),
-      bottomBackground: Color(0xff02284c),
-      bottomForeground: Color(0xffe6546c),
-    );
-    final androidTheme = MathClockThemeData(
-      topBackground: Color(0xffffffff),
-      topForeground: Color(0xff3ddb85),
-      bottomBackground: Color(0xff073042),
-      bottomForeground: Color(0xffeff7cf),
-    );
-
-    final theme = redGreenTheme;
-
     return MathClockDisplay(
-      theme: theme,
+      theme: generateThemeByTime(widget.hour, widget.minute),
       hourTerm: _hourTerm,
       minuteTerm: _minuteTerm,
     );
@@ -99,14 +53,12 @@ class _MathClockState extends State<MathClock> {
 
 class MathClockDisplay extends StatelessWidget {
   const MathClockDisplay({
-    Key key,
     @required this.theme,
     @required this.hourTerm,
     @required this.minuteTerm,
   })  : assert(theme != null),
         assert(hourTerm != null),
-        assert(minuteTerm != null),
-        super(key: key);
+        assert(minuteTerm != null);
 
   final MathClockThemeData theme;
   final Term hourTerm;
@@ -127,9 +79,10 @@ class MathClockDisplay extends StatelessWidget {
             tag: hourTerm,
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              child: TermTheme(
-                data: TermThemeData(color: theme.topForeground),
-                child: TermWidget(hourTerm),
+              child: ShadowedTermWidget(
+                term: hourTerm,
+                color: theme.topForeground,
+                shadowColor: Colors.black12,
               ),
             ),
           ),
@@ -138,9 +91,10 @@ class MathClockDisplay extends StatelessWidget {
             tag: minuteTerm,
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              child: TermTheme(
-                data: TermThemeData(color: theme.bottomForeground),
-                child: TermWidget(minuteTerm),
+              child: ShadowedTermWidget(
+                term: minuteTerm,
+                color: theme.bottomForeground,
+                shadowColor: Colors.white12,
               ),
             ),
           ),
