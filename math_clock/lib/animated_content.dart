@@ -39,12 +39,12 @@ class _AnimatedContentState extends State<AnimatedContent>
 
     final appearCurve =
         CurveTween(curve: Curves.easeOutExpo).animate(_controller);
-    _newChildScale = Tween<double>(begin: 200, end: 1).animate(appearCurve);
+    _newChildScale = Tween<double>(begin: 4, end: 1).animate(appearCurve);
     _newChildOpacity = Tween<double>(begin: 0, end: 1).animate(appearCurve);
     final disappearCurve =
         CurveTween(curve: Curves.easeIn).animate(_controller);
     _oldChildScale = Tween<double>(begin: 1, end: 0.5).animate(disappearCurve);
-    _oldChildOpacity = Tween<double>(begin: 1, end: -2).animate(disappearCurve);
+    _oldChildOpacity = Tween<double>(begin: 1, end: -8).animate(disappearCurve);
 
     _controller.value = 1;
   }
@@ -84,7 +84,10 @@ class _AnimatedContentState extends State<AnimatedContent>
           ),
         ScaleTransition(
           scale: _newChildScale,
-          child: widget.child,
+          child: FadeTransition(
+            opacity: _newChildOpacity,
+            child: widget.child,
+          ),
         ),
       ],
     );
