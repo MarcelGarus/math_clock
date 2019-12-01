@@ -43,6 +43,7 @@ Term generateMathTerm(int number) {
     node = _makeMoreComplicated(node, possibleTypes);
   }
 
+  assert(node.compute() == number);
   return node;
 }
 
