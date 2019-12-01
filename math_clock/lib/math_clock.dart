@@ -71,29 +71,31 @@ class MathClockDisplay extends StatelessWidget {
         child: SlantedLayout(
           topColor: theme.topBackground,
           bottomColor: theme.bottomBackground,
-          top: AnimatedContent(
-            alignment: Alignment.bottomLeft,
-            tag: hourTerm,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: ShadowedTermWidget(
-                term: hourTerm,
-                color: theme.topForeground,
-                shadowColor: Colors.black12,
-              ),
-            ),
-          ),
-          bottom: AnimatedContent(
-            alignment: Alignment.topRight,
-            tag: minuteTerm,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: ShadowedTermWidget(
-                term: minuteTerm,
-                color: theme.bottomForeground,
-                shadowColor: Colors.white24,
-              ),
-            ),
+          top: _buildTerm(isHourTerm: true),
+          bottom: _buildTerm(isHourTerm: false),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTerm({@required bool isHourTerm}) {
+    final term = isHourTerm ? hourTerm : minuteTerm;
+    return AnimatedContent(
+      alignment: isHourTerm ? Alignment.bottomLeft : Alignment.topRight,
+      tag: term,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Semantics(
+          container: true,
+          excludeSemantics: true,
+          label: isHourTerm
+              ? 'This is the hour term: ${term.toSemanticString()}'
+              : 'This is the minute term: ${term.toSemanticString()}',
+          readOnly: true,
+          child: ShadowedTermWidget(
+            term: term,
+            color: isHourTerm ? theme.topForeground : theme.bottomForeground,
+            shadowColor: isHourTerm ? Colors.black12 : Colors.white24,
           ),
         ),
       ),
