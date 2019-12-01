@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clock_helper/model.dart';
 import 'package:math_clock/animated_content.dart';
 import 'package:math_clock/math/math.dart';
 import 'package:math_clock/theme.dart';
@@ -7,9 +8,14 @@ import 'term_widgets/shadowed_term_widget.dart';
 import 'slanted_layout/slanted_layout.dart';
 
 class MathClock extends StatefulWidget {
-  const MathClock({@required this.now}) : assert(now != null);
+  const MathClock({
+    @required this.now,
+    @required this.weather,
+  })  : assert(now != null),
+        assert(weather != null);
 
   final DateTime now;
+  final WeatherCondition weather;
 
   @override
   _MathClockState createState() => _MathClockState();
@@ -40,29 +46,29 @@ class _MathClockState extends State<MathClock> {
 
   @override
   Widget build(BuildContext context) {
-    return MathClockDisplay(
-      theme: generateThemeByTime(widget.now),
-      hourTerm: _hourTerm,
-      minuteTerm: _minuteTerm,
+    return MathClockTheme.fromWeather(
+      weather: widget.weather,
+      child: MathClockDisplay(
+        hourTerm: _hourTerm,
+        minuteTerm: _minuteTerm,
+      ),
     );
   }
 }
 
 class MathClockDisplay extends StatelessWidget {
   const MathClockDisplay({
-    @required this.theme,
     @required this.hourTerm,
     @required this.minuteTerm,
-  })  : assert(theme != null),
-        assert(hourTerm != null),
+  })  : assert(hourTerm != null),
         assert(minuteTerm != null);
 
-  final MathClockThemeData theme;
   final Term hourTerm;
   final Term minuteTerm;
 
   @override
   Widget build(BuildContext context) {
+    final theme = MathClockTheme.of(context);
     return FittedBox(
       child: Container(
         width: 500,
@@ -71,15 +77,17 @@ class MathClockDisplay extends StatelessWidget {
         child: SlantedLayout(
           topColor: theme.topBackground,
           bottomColor: theme.bottomBackground,
-          top: _buildTerm(isHourTerm: true),
-          bottom: _buildTerm(isHourTerm: false),
+          top: _buildTerm(context, isHourTerm: true),
+          bottom: _buildTerm(context, isHourTerm: false),
         ),
       ),
     );
   }
 
-  Widget _buildTerm({@required bool isHourTerm}) {
+  Widget _buildTerm(BuildContext context, {@required bool isHourTerm}) {
     final term = isHourTerm ? hourTerm : minuteTerm;
+    final theme = MathClockTheme.of(context);
+
     return AnimatedContent(
       alignment: isHourTerm ? Alignment.bottomLeft : Alignment.topRight,
       tag: term,
@@ -95,7 +103,7 @@ class MathClockDisplay extends StatelessWidget {
           child: ShadowedTermWidget(
             term: term,
             color: isHourTerm ? theme.topForeground : theme.bottomForeground,
-            shadowColor: isHourTerm ? Colors.black12 : Colors.white24,
+            shadowColor: isHourTerm ? theme.topShadow : theme.bottomShadow,
           ),
         ),
       ),

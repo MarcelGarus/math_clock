@@ -1,14 +1,16 @@
-import 'dart:ui';
-
+import 'package:flutter/material.dart';
+import 'package:flutter_clock_helper/model.dart';
 import 'package:meta/meta.dart';
 
 @immutable
 class MathClockThemeData {
   const MathClockThemeData({
-    this.topBackground,
-    this.topForeground,
-    this.bottomBackground,
-    this.bottomForeground,
+    @required this.topBackground,
+    @required this.topForeground,
+    this.topShadow,
+    @required this.bottomBackground,
+    @required this.bottomForeground,
+    this.bottomShadow,
   })  : assert(topBackground != null),
         assert(topForeground != null),
         assert(bottomBackground != null),
@@ -16,77 +18,91 @@ class MathClockThemeData {
 
   final Color topBackground;
   final Color topForeground;
+  final Color topShadow;
   final Color bottomBackground;
   final Color bottomForeground;
-
-  /// Linearly interpolate between two [MathClockThemeData].
-  ///
-  /// The [t] argument represents the position on the timeline, with 0.0
-  /// meaning that the interpolation has not started, returning [a] (or
-  /// something equivalent to [a]), 1.0 meaning that the interpolation has
-  /// finished, returning [b] (or something equivalent to [b]), and values in
-  /// between meaning that the interpolation is at the relevant point on the
-  /// timeline between [a] and [b].
-  static MathClockThemeData lerp(
-    MathClockThemeData a,
-    MathClockThemeData b,
-    double t,
-  ) {
-    assert(t != null);
-    assert(a != null);
-    assert(b != null);
-
-    return MathClockThemeData(
-      topBackground: Color.lerp(a.topBackground, b.topBackground, t),
-      topForeground: Color.lerp(a.topForeground, b.topForeground, t),
-      bottomBackground: Color.lerp(a.bottomBackground, b.bottomBackground, t),
-      bottomForeground: Color.lerp(a.bottomForeground, b.bottomForeground, t),
-    );
-  }
+  final Color bottomShadow;
 }
 
-const _themes = [
-  // Chocolate theme.
-  MathClockThemeData(
-    topBackground: Color(0xfff2dcd3),
-    topForeground: Color(0xff85506e),
-    bottomBackground: Color(0xff3b3638),
-    bottomForeground: Color(0xffeed7db),
+const _themesByWeather = {
+  // These are the Google (Cloud) colors. :D
+  WeatherCondition.cloudy: MathClockThemeData(
+    topBackground: Color(0xffffffff),
+    topForeground: Color(0xff4285F4),
+    topShadow: Color(0x660F9D58),
+    bottomBackground: Color(0xfff0f0f0),
+    bottomForeground: Color(0xffDB4437),
+    bottomShadow: Color(0xffF4B400),
   ),
-  // Mint theme.
-  MathClockThemeData(
+  WeatherCondition.foggy: MathClockThemeData(
+    topBackground: Color(0xfffffcfc),
+    topForeground: Color(0xfffcbbb1),
+    topShadow: Color(0xff8F6F7A),
+    bottomBackground: Color(0xffFEDAA5),
+    bottomForeground: Color(0xff91715E),
+    bottomShadow: Color(0xffE6B395),
+  ),
+  WeatherCondition.rainy: MathClockThemeData(
+    topBackground: Color(0xff375EB3),
+    topForeground: Color(0xffffffff),
+    topShadow: Color(0xff293C47),
+    bottomBackground: Color(0xff4F87FF),
+    bottomForeground: Color(0xffffffff),
+    bottomShadow: Color(0xff1B1B45),
+  ),
+  WeatherCondition.snowy: MathClockThemeData(
+    topBackground: Color(0xffffffff),
+    topForeground: Color(0xff4389E8),
+    topShadow: Color(0xffd8edfc),
+    bottomBackground: Color(0xff98ddfc),
+    bottomForeground: Color(0xffffffff),
+    bottomShadow: Color(0xff4389E8),
+  ),
+  WeatherCondition.sunny: MathClockThemeData(
+    topBackground: Color(0xfffbdf99),
+    topForeground: Color(0xff2e57ba),
+    topShadow: Colors.black12,
+    bottomBackground: Color(0xff02284c),
+    bottomForeground: Color(0xfff6748c),
+    bottomShadow: Colors.white12,
+  ),
+  WeatherCondition.thunderstorm: MathClockThemeData(
+    topBackground: Color(0xff02284c),
+    topForeground: Color(0xffffffee),
+    topShadow: Color(0xfff6748c),
+    bottomBackground: Color(0xff000000),
+    bottomForeground: Color(0xfff6748c),
+    bottomShadow: Color(0xff62486c),
+  ),
+  WeatherCondition.windy: MathClockThemeData(
     topBackground: Color(0xffeff3fb),
     topForeground: Color(0xffd7784e),
+    topShadow: Color(0xffe7dcce),
     bottomBackground: Color(0xff232323),
     bottomForeground: Color(0xffbff3eb),
   ),
-  // Android theme.
-  MathClockThemeData(
-    topBackground: Color(0xffffffff),
-    topForeground: Color(0xff2dbb75),
-    bottomBackground: Color(0xff073042),
-    bottomForeground: Color(0xffeff7cf),
-  ),
-  // Dawn theme.
-  MathClockThemeData(
-    topBackground: Color(0xfffbdf99),
-    topForeground: Color(0xff2e57ba),
-    bottomBackground: Color(0xff02284c),
-    bottomForeground: Color(0xfff6748c),
-  ),
-];
+};
 
-/// Generates a theme based on the time of day.
-/// We just rotate and interpolate between all the different [_themes].
-MathClockThemeData generateThemeByTime(DateTime now) {
-  assert(now != null);
+class MathClockTheme extends InheritedWidget {
+  const MathClockTheme({
+    @required this.data,
+    @required Widget child,
+  })  : assert(data != null),
+        super(child: child);
 
-  const minutesPerDay = 24 * 60;
-  final minutesThisDay = now.hour * 60 + now.minute;
-  final themeIndex = _themes.length * minutesThisDay / minutesPerDay;
+  MathClockTheme.fromWeather({
+    @required WeatherCondition weather,
+    @required Widget child,
+  }) : this(data: _themesByWeather[weather], child: child);
 
-  final lastTheme = _themes[themeIndex.floor()];
-  final nextTheme = _themes[(themeIndex.floor() + 1) % _themes.length];
+  final MathClockThemeData data;
 
-  return MathClockThemeData.lerp(lastTheme, nextTheme, themeIndex % 1);
+  static MathClockThemeData of(BuildContext context) {
+    final inheritedTheme =
+        context.inheritFromWidgetOfExactType(MathClockTheme) as MathClockTheme;
+    return inheritedTheme?.data;
+  }
+
+  @override
+  bool updateShouldNotify(MathClockTheme oldWidget) => oldWidget.data != data;
 }

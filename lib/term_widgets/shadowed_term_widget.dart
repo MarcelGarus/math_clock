@@ -21,13 +21,14 @@ class ShadowedTermWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        Transform.translate(
-          offset: Offset(3, 3),
-          child: TermTheme(
-            data: TermThemeData(color: shadowColor),
-            child: TermWidget(term: term),
+        if (shadowColor != null)
+          Transform.translate(
+            offset: Offset(3, 3),
+            child: TermTheme(
+              data: TermThemeData(color: shadowColor),
+              child: TermWidget(term: term),
+            ),
           ),
-        ),
         TermTheme(
           data: TermThemeData(color: color),
           child: TermWidget(term: term),

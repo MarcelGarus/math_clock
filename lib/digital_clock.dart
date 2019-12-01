@@ -67,5 +67,8 @@ class _DigitalClockState extends State<DigitalClock> {
   }
 
   @override
-  Widget build(BuildContext context) => MathClock(now: _dateTime);
+  Widget build(BuildContext context) => MathClock(
+        now: _dateTime,
+        weather: widget.model.weatherCondition,
+      );
 }
