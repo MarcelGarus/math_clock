@@ -28,13 +28,13 @@ class SlantedLayout extends StatelessWidget {
             ),
           ),
         ),
-        _buildContent(true),
-        _buildContent(false),
+        _buildContent(isTop: true),
+        _buildContent(isTop: false),
       ],
     );
   }
 
-  Widget _buildContent(bool isTop) {
+  Widget _buildContent({@required bool isTop}) {
     return ClipPath(
       clipper: isTop ? _TopSlantClipper() : _BottomSlantClipper(),
       child: Container(
