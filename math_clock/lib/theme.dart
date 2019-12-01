@@ -60,19 +60,19 @@ const _themes = [
     bottomBackground: Color(0xff232323),
     bottomForeground: Color(0xffbff3eb),
   ),
-  // Dawn theme.
-  MathClockThemeData(
-    topBackground: Color(0xfffbdf99),
-    topForeground: Color(0xff2e57ba),
-    bottomBackground: Color(0xff02284c),
-    bottomForeground: Color(0xfff6748c),
-  ),
   // Android theme.
   MathClockThemeData(
     topBackground: Color(0xffffffff),
     topForeground: Color(0xff2dbb75),
     bottomBackground: Color(0xff073042),
     bottomForeground: Color(0xffeff7cf),
+  ),
+  // Dawn theme.
+  MathClockThemeData(
+    topBackground: Color(0xfffbdf99),
+    topForeground: Color(0xff2e57ba),
+    bottomBackground: Color(0xff02284c),
+    bottomForeground: Color(0xfff6748c),
   ),
 ];
 
