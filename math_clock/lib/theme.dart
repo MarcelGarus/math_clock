@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flutter_clock_helper/model.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -46,56 +45,48 @@ class MathClockThemeData {
   }
 }
 
-// Weather is either: cloudy, foggy, rainy, snowy, sunny, thunderstorm, windy
-const pinkChaiTheme = MathClockThemeData(
-  topBackground: Color(0xfff2dcd3),
-  topForeground: Color(0xff3b3638),
-  bottomBackground: Color(0xff85506e),
-  bottomForeground: Color(0xffeed7db),
-);
-const redGreenTheme = MathClockThemeData(
-  topBackground: Color(0xfffadae2),
-  topForeground: Color(0xffc8838b),
-  bottomBackground: Color(0xff22aa8d),
-  bottomForeground: Color(0xffbff3eb),
-);
-const dawnTheme = MathClockThemeData(
-  topBackground: Color(0xffeba559),
-  topForeground: Color(0xff2e57ba),
-  bottomBackground: Color(0xff02284c),
-  bottomForeground: Color(0xffe6546c),
-);
-const androidTheme = MathClockThemeData(
-  topBackground: Color(0xffffffff),
-  topForeground: Color(0xff3ddb85),
-  bottomBackground: Color(0xff073042),
-  bottomForeground: Color(0xffeff7cf),
-);
-
-const themes = [
-  pinkChaiTheme,
-  redGreenTheme,
-  dawnTheme,
-  androidTheme,
+const _themes = [
+  // Chocolate theme.
+  MathClockThemeData(
+    topBackground: Color(0xfff2dcd3),
+    topForeground: Color(0xff85506e),
+    bottomBackground: Color(0xff3b3638),
+    bottomForeground: Color(0xffeed7db),
+  ),
+  // Mint theme.
+  MathClockThemeData(
+    topBackground: Color(0xffeff3fb),
+    topForeground: Color(0xffd7784e),
+    bottomBackground: Color(0xff232323),
+    bottomForeground: Color(0xffbff3eb),
+  ),
+  // Dawn theme.
+  MathClockThemeData(
+    topBackground: Color(0xfffbdf99),
+    topForeground: Color(0xff2e57ba),
+    bottomBackground: Color(0xff02284c),
+    bottomForeground: Color(0xfff6748c),
+  ),
+  // Android theme.
+  MathClockThemeData(
+    topBackground: Color(0xffffffff),
+    topForeground: Color(0xff2dbb75),
+    bottomBackground: Color(0xff073042),
+    bottomForeground: Color(0xffeff7cf),
+  ),
 ];
 
-MathClockThemeData generateThemeByTime(int hour, int minute) {
-  const minutesPerDay = 24 * 60;
-  final minutesThisDay = hour * 60 + minute;
-  final themeIndex = themes.length * minutesThisDay / minutesPerDay;
+/// Generates a theme based on the time of day.
+/// We just rotate and interpolate between all the different [_themes].
+MathClockThemeData generateThemeByTime(DateTime now) {
+  assert(now != null);
 
-  final lastTheme = themes[themeIndex.floor()];
-  final nextTheme = themes[(themeIndex.floor() + 1) % themes.length];
+  const minutesPerDay = 24 * 60;
+  final minutesThisDay = now.hour * 60 + now.minute;
+  final themeIndex = _themes.length * minutesThisDay / minutesPerDay;
+
+  final lastTheme = _themes[themeIndex.floor()];
+  final nextTheme = _themes[(themeIndex.floor() + 1) % _themes.length];
 
   return MathClockThemeData.lerp(lastTheme, nextTheme, themeIndex % 1);
 }
-
-const themesByWeather = <WeatherCondition, MathClockThemeData>{
-  WeatherCondition.cloudy: androidTheme,
-  WeatherCondition.foggy: redGreenTheme,
-  WeatherCondition.rainy: androidTheme,
-  WeatherCondition.snowy: androidTheme,
-  WeatherCondition.sunny: dawnTheme,
-  WeatherCondition.thunderstorm: androidTheme,
-  WeatherCondition.windy: androidTheme,
-};

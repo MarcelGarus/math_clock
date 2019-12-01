@@ -67,10 +67,5 @@ class _DigitalClockState extends State<DigitalClock> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MathClock(
-      hour: _dateTime.hour % (widget.model.is24HourFormat ? 24 : 12),
-      minute: _dateTime.minute,
-    );
-  }
+  Widget build(BuildContext context) => MathClock(now: _dateTime);
 }

@@ -7,12 +7,9 @@ import 'term_widgets/shadowed_term_widget.dart';
 import 'slanted_layout/slanted_layout.dart';
 
 class MathClock extends StatefulWidget {
-  const MathClock({@required this.hour, @required this.minute})
-      : assert(hour != null),
-        assert(minute != null);
+  const MathClock({@required this.now}) : assert(now != null);
 
-  final int hour;
-  final int minute;
+  final DateTime now;
 
   @override
   _MathClockState createState() => _MathClockState();
@@ -22,8 +19,8 @@ class _MathClockState extends State<MathClock> {
   Term _hourTerm;
   Term _minuteTerm;
 
-  void _updateHour() => _hourTerm = generateMathTerm(widget.hour);
-  void _updateMinute() => _minuteTerm = generateMathTerm(widget.minute);
+  void _updateHour() => _hourTerm = generateMathTerm(widget.now.hour);
+  void _updateMinute() => _minuteTerm = generateMathTerm(widget.now.minute);
 
   @override
   void initState() {
@@ -37,14 +34,14 @@ class _MathClockState extends State<MathClock> {
   void didUpdateWidget(MathClock oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.hour != widget.hour) setState(_updateHour);
-    if (oldWidget.minute != widget.minute) setState(_updateMinute);
+    if (oldWidget.now.hour != widget.now.hour) setState(_updateHour);
+    if (oldWidget.now.minute != widget.now.minute) setState(_updateMinute);
   }
 
   @override
   Widget build(BuildContext context) {
     return MathClockDisplay(
-      theme: generateThemeByTime(widget.hour, widget.minute),
+      theme: generateThemeByTime(widget.now),
       hourTerm: _hourTerm,
       minuteTerm: _minuteTerm,
     );
@@ -94,7 +91,7 @@ class MathClockDisplay extends StatelessWidget {
               child: ShadowedTermWidget(
                 term: minuteTerm,
                 color: theme.bottomForeground,
-                shadowColor: Colors.white12,
+                shadowColor: Colors.white24,
               ),
             ),
           ),
