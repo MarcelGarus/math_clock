@@ -25,7 +25,7 @@ class MathClockThemeData {
 }
 
 const _themesByWeather = {
-  // These are the Google (Cloud) colors. :D
+  // These are the (Google) Cloud colors. :D
   WeatherCondition.cloudy: MathClockThemeData(
     topBackground: Color(0xffffffff),
     topForeground: Color(0xff4285F4),
