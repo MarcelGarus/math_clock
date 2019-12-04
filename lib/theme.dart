@@ -25,38 +25,37 @@ class MathClockThemeData {
 }
 
 const _themesByWeather = {
-  // These are the (Google) Cloud colors. :D
   WeatherCondition.cloudy: MathClockThemeData(
     topBackground: Color(0xffffffff),
-    topForeground: Color(0xff4285F4),
-    topShadow: Color(0x660F9D58),
+    topForeground: Color(0xff3172e2),
+    topShadow: Color(0x660f9d58),
     bottomBackground: Color(0xfff0f0f0),
-    bottomForeground: Color(0xffDB4437),
-    bottomShadow: Color(0xffF4B400),
+    bottomForeground: Color(0xffbb3427),
+    bottomShadow: Color(0xfff4b400),
   ),
   WeatherCondition.foggy: MathClockThemeData(
     topBackground: Color(0xfffffcfc),
     topForeground: Color(0xfffcbbb1),
-    topShadow: Color(0xff8F6F7A),
-    bottomBackground: Color(0xffFEDAA5),
-    bottomForeground: Color(0xff91715E),
-    bottomShadow: Color(0xffE6B395),
+    topShadow: Color(0xff8f5f6a),
+    bottomBackground: Color(0xfffedaa5),
+    bottomForeground: Color(0xff79583e),
+    bottomShadow: Color(0xffe6b395),
   ),
   WeatherCondition.rainy: MathClockThemeData(
-    topBackground: Color(0xff375EB3),
+    topBackground: Color(0xff2f4d9b),
     topForeground: Color(0xffffffff),
-    topShadow: Color(0xff293C47),
-    bottomBackground: Color(0xff4F87FF),
+    topShadow: Color(0xff293c47),
+    bottomBackground: Color(0xff3f67cf),
     bottomForeground: Color(0xffffffff),
-    bottomShadow: Color(0xff1B1B45),
+    bottomShadow: Color(0xff1b1b45),
   ),
   WeatherCondition.snowy: MathClockThemeData(
     topBackground: Color(0xffffffff),
-    topForeground: Color(0xff4389E8),
+    topForeground: Color(0xff5F9ED7),
     topShadow: Color(0xffd8edfc),
-    bottomBackground: Color(0xff98ddfc),
+    bottomBackground: Color(0xff5F9ED7),
     bottomForeground: Color(0xffffffff),
-    bottomShadow: Color(0xff4389E8),
+    bottomShadow: Color(0xff2379C8),
   ),
   WeatherCondition.sunny: MathClockThemeData(
     topBackground: Color(0xfffbdf99),
@@ -76,7 +75,7 @@ const _themesByWeather = {
   ),
   WeatherCondition.windy: MathClockThemeData(
     topBackground: Color(0xffeff3fb),
-    topForeground: Color(0xffd7784e),
+    topForeground: Color(0xffa7582e),
     topShadow: Color(0xffe7dcce),
     bottomBackground: Color(0xff232323),
     bottomForeground: Color(0xffbff3eb),
