@@ -31,16 +31,16 @@ class _MathClockState extends State<MathClock> {
       setState(() => _minuteTerm = Multiply(Root(Number(9)), Number(13)));
       await Future.delayed(Duration(milliseconds: 300));
       setState(() => _weather = WeatherCondition.windy);
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 1));
       setState(() => _weather = WeatherCondition.snowy);
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 1));
       setState(() => _weather = WeatherCondition.foggy);
-      await Future.delayed(Duration(milliseconds: 1600));
+      await Future.delayed(Duration(milliseconds: 600));
       setState(() => _minuteTerm =
           Multiply(Modulo(Number(58), Number(10)), Root(Number(25))));
       await Future.delayed(Duration(milliseconds: 400));
       setState(() => _weather = WeatherCondition.thunderstorm);
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 1));
       setState(() => _weather = WeatherCondition.cloudy);
       await Future.delayed(Duration(seconds: 2));
       setState(() => _ready = false);
